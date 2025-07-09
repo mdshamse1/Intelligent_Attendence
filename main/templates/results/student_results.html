@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Results - Intelligent Attendance System{% endblock %}
+
+{% block page_title %}{{ student.user.first_name }} {{ student.user.last_name }} - Results{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header">
+                <h5 class="mb-0">Student Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Student ID:</strong> {{ student.student_id }}</p>
+                        <p><strong>Name:</strong> {{ student.user.first_name }} {{ student.user.last_name }}</p>
+                        <p><strong>Email:</strong> {{ student.user.email }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Phone:</strong> {{ student.phone|default:"-" }}</p>
+                        <p><strong>Status:</strong> 
+                            {% if student.is_blocked %}
+                                <span class="badge bg-danger">Blocked</span>
+                            {% else %}
+                                <span class="badge bg-success">Active</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Academic Results</h5>
+        <a href="{% url 'student_list' %}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-arrow-left me-2"></i>Back to Students
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Subject</th>
+                        <th>Exam Type</th>
+                        <th>Marks</th>
+                        <th>Percentage</th>
+                        <th>Grade</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in results %}
+                    <tr>
+                        <td>{{ result.subject.name }}</td>
+                        <td>
+                            <span class="badge bg-info">{{ result.get_exam_type_display }}</span>
+                        </td>
+                        <td>{{ result.marks_obtained }}/{{ result.total_marks }}</td>
+                        <td>{{ result.get_percentage|floatformat:1 }}%</td>
+                        <td>
+                            {% if result.get_grade == 'A+' %}
+                                <span class="badge bg-success">{{ result.get_grade }}</span>
+                            {% elif result.get_grade == 'A' %}
+                                <span class="badge bg-primary">{{ result.get_grade }}</span>
+                            {% elif result.get_grade == 'B' %}
+                                <span class="badge bg-info">{{ result.get_grade }}</span>
+                            {% elif result.get_grade == 'C' %}
+                                <span class="badge bg-warning">{{ result.get_grade }}</span>
+                            {% elif result.get_grade == 'D' %}
+                                <span class="badge bg-secondary">{{ result.get_grade }}</span>
+                            {% else %}
+                                <span class="badge bg-danger">{{ result.get_grade }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ result.exam_date }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center">No results found for this student.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

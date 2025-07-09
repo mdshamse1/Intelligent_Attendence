@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Student - Intelligent Attendance System{% endblock %}
+
+{% block page_title %}Delete Student{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow border-danger">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Confirm Deletion
+                </h5>
+            </div>
+            <div class="card-body">
+                <p>Are you sure you want to delete the following student?</p>
+                <div class="alert alert-info">
+                    <strong>Student ID:</strong> {{ student.student_id }}<br>
+                    <strong>Name:</strong> {{ student.user.first_name }} {{ student.user.last_name }}<br>
+                    <strong>Email:</strong> {{ student.user.email }}
+                </div>
+                <p class="text-danger">
+                    <strong>Warning:</strong> This action cannot be undone. All attendance records and results for this student will also be deleted.
+                </p>
+                
+                <form method="post" class="d-flex justify-content-between">
+                    {% csrf_token %}
+                    <a href="{% url 'student_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Cancel
+                    </a>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-2"></i>Delete Student
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
